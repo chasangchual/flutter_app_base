@@ -38,33 +38,30 @@ Widget _buildBottomNavigationBar(BuildContext context) {
 }
 
 List<BottomNavigationBarItem> bottomNavigationItems(BuildContext context) {
-  return [
-    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-    BottomNavigationBarItem(icon: Icon(Icons.help), label: 'Help')
-  ];
+  return NavigationTabItem.values.map((item) => item.toBottomNavigationBarItem(context, isActivated: false)).toList();
 }
 
-//
-// enum TabItem {
-//   home(Icons.home, '홈', Container()),
-//   favorite(Icons.star, '즐겨찾기', const Container());
-//
-//   final IconData activeIcon;
-//   final IconData inActiveIcon;
-//   final String tabName;
-//   final Widget firstPage;
-//
-//   const TabItem(this.activeIcon, this.tabName, this.firstPage, {IconData? inActiveIcon})
-//       : inActiveIcon = inActiveIcon ?? activeIcon;
-//
-//   BottomNavigationBarItem toNavigationBarItem(BuildContext context, {required bool isActivated}) {
-//     return BottomNavigationBarItem(
-//         icon: Icon(
-//           key: ValueKey(tabName),
-//           isActivated ? activeIcon : inActiveIcon,
-//           color:
-//           isActivated ? context.appColors.iconButton : context.appColors.iconButtonInactivate,
-//         ),
-//         label: tabName);
-//   }
-// }
+enum NavigationTabItem {
+  home(Icons.home, 'Home', Placeholder()),
+  help(Icons.help, 'Help', Placeholder());
+
+  final IconData activeIcon;
+  final IconData inActiveIcon;
+  final String name;
+  final Widget initialPage;
+
+  const NavigationTabItem(this.activeIcon, this.name, this.initialPage, {IconData? inActiveIcon})
+      : inActiveIcon = inActiveIcon ?? activeIcon;
+
+  BottomNavigationBarItem toBottomNavigationBarItem(BuildContext context, {required bool isActivated}) {
+    return BottomNavigationBarItem(
+        icon: Icon(
+          key: ValueKey(name),
+          isActivated ? activeIcon : inActiveIcon,
+          color: isActivated
+              ? MainController.to.themeColors.iconButton
+              : MainController.to.themeColors.iconButtonInactivate,
+        ),
+        label: name);
+  }
+}
