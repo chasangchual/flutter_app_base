@@ -1,4 +1,4 @@
-import 'package:app_base/controller/main_controller.dart';
+import 'package:app_base/controller/app_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,8 +9,8 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       return Scaffold(
-        extendBody: MainController.to.extendBody,
-        body: MainScreenBody(),
+        extendBody: AppController.to.extendBody,
+        body: const MainScreenBody(),
         bottomNavigationBar: _buildBottomNavigationBar(context),
       );
     });
@@ -24,8 +24,8 @@ class MainScreenBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: SafeArea(
-        child: Placeholder(),
-        bottom: !MainController.to.extendBody,
+        bottom: !AppController.to.extendBody,
+        child: const Placeholder(),
       ),
     );
   }
@@ -33,17 +33,30 @@ class MainScreenBody extends StatelessWidget {
 
 Widget _buildBottomNavigationBar(BuildContext context) {
   return Container(
-    child: BottomNavigationBar(items: bottomNavigationItems(context)),
+    child: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed, showUnselectedLabels: true, items: bottomNavigationItems(context)),
   );
 }
 
 List<BottomNavigationBarItem> bottomNavigationItems(BuildContext context) {
-  return NavigationTabItem.values.map((item) => item.toBottomNavigationBarItem(context, isActivated: false)).toList();
+  return NavigationTabItem.values.map((item) => item.toBottomNavigationBarItem(context, isActivated: true)).toList();
 }
 
 enum NavigationTabItem {
-  home(Icons.home, 'Home', Placeholder()),
-  help(Icons.help, 'Help', Placeholder());
+  home(
+      Icons.home_filled,
+      'Home',
+      Center(
+        child: Text('Home'),
+      )),
+  user(
+      Icons.verified_user,
+      'User',
+      Center(
+        child: Text('User'),
+      )),
+  help(Icons.help, 'Help', Center(child: Text('Help'))),
+  more(Icons.more_horiz, 'More', Center(child: Text('More')));
 
   final IconData activeIcon;
   final IconData inActiveIcon;
@@ -58,10 +71,10 @@ enum NavigationTabItem {
         icon: Icon(
           key: ValueKey(name),
           isActivated ? activeIcon : inActiveIcon,
-          color: isActivated
-              ? MainController.to.themeColors.iconButton
-              : MainController.to.themeColors.iconButtonInactivate,
+          color:
+              isActivated ? AppController.to.themeColors.iconButton : AppController.to.themeColors.iconButtonInactivate,
         ),
-        label: name);
+        label: name,
+        tooltip: name);
   }
 }
