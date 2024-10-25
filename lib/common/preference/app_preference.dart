@@ -1,4 +1,5 @@
 import 'package:app_base/common/theme/custom_theme.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// The `AppPreferences` class serves as a centralized utility for managing application-level
@@ -121,6 +122,14 @@ class AppPreferences {
     return _prefs.remove(key);
   }
 
+  static T getValueOrSetDefault<T>(PreferenceItem<T> item) {
+    final String key = getPrefKey(item);
+    if (!containsKey(item)) {
+      setValue(item, item.defaultValue);
+    }
+    return getValue(item);
+  }
+
   static T getValue<T>(PreferenceItem<T> item) {
     final String key = getPrefKey(item);
     switch (T) {
@@ -156,6 +165,8 @@ class AppPreferences {
           return CustomTheme.values.asNameMap()[value] as T?;
         case "DateTime?":
           return DateTime.parse(value) as T?;
+        case "ThemeMode?":
+          return ThemeMode.values.byName(value!) as T?;
         default:
           throw Exception('$t Please add a transform function for the type.');
       }
@@ -165,6 +176,8 @@ class AppPreferences {
           return CustomTheme.values.asNameMap()[value] as T?;
         case DateTime:
           return DateTime.parse(value) as T?;
+        case ThemeMode:
+          return ThemeMode.values.byName(value!) as T?;
         default:
           throw Exception('$t Please add a transform function for the type.');
       }
