@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
     return Obx(() {
       return GetMaterialApp(
         initialBinding: MainBindings(),
-        home: const MainScreen(),
+        home: MainScreen(),
         theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: AppController.to.themeMode,
